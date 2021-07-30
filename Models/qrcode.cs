@@ -95,7 +95,7 @@ namespace createQrcode.Models
         }
         public Qrcode(ReqQrcode data)
         {
-            this.v_00 = "00";
+            this.v_00 = "01";
             this.v_01 = "12";
             this.v_26_00 = data.merchantGuid;
             this.v_26_01 = data.merchantId;
@@ -122,7 +122,7 @@ namespace createQrcode.Models
             {
                 for (int ii = 0; ii < 8; ii++)
                 {
-                    var bit = ((bytes[i] >> (7 - i) & 1) == 1);
+                    var bit = ((bytes[i] >> (7 - ii) & 1) == 1);
                     var c15 = ((crc >> 15 & 1) == 1);
                     crc <<= 1;
                     if (c15 ^ bit)
@@ -133,7 +133,8 @@ namespace createQrcode.Models
             }
             crc &= 0xffff;
             var kq = crc.ToString("X");
-            return kq.PadLeft(4, '0');
+           return kq.PadLeft(4, '0');
+            //return crc.ToString();
 
         }
         private string calc_val(string key, string val)
@@ -150,7 +151,7 @@ namespace createQrcode.Models
             return this.calc_val("26", v_00 + v_01);
         }
        
-        private string f_52() { return this.calc_val("524", this.v_52); }
+        private string f_52() { return this.calc_val("52", this.v_52); }
         private string f_53() { return this.calc_val("53", this.v_53); }
         private string f_54() { return this.calc_val("54", this.v_54); }
         private string f_58() { return this.calc_val("58", this.v_58); }
@@ -158,11 +159,12 @@ namespace createQrcode.Models
         private string f_60() { return this.calc_val("60", this.v_60); }
         private string f_61() { return this.calc_val("61", this.v_61); }
         private string f_62() {
-            var v_01 = this.calc_val("00", this.v_62_01);
-            var v_03 = this.calc_val("01", this.v_62_03);
+            var v_01 = this.calc_val("01", this.v_62_01);
+            var v_03 = this.calc_val("03", this.v_62_03);
             var v_07 = this.calc_val("07", this.v_62_07);
             var v_08 = this.calc_val("08", this.v_62_08);
-            return this.calc_val("26", v_01 + v_03 + v_07 + v_08);
+            var v_09 = this.calc_val("09", this.v_62_09);
+            return this.calc_val("62", v_01 + v_03 + v_07 + v_08 + v_09);
         }
        
         private string f_63() {

@@ -38,6 +38,7 @@
                 });
                 var kq = await response.json();
                 var maqr = kq.data;
+                console.log(maqr);
                 document.getElementById("qrcode").innerHTML = "";
                 new QRCode(document.getElementById("qrcode"), maqr);
             } catch (err) {
