@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-floating mb-3">
+                <label for="floatingInput">Mã định danh QRcode (Mã bill)</label>
+                <input type="text" class="form-control" name="ma">
+
+            </div>
+            <div class="form-floating mb-3">
+                <label for="floatingInput">Số tiền</label>
+                <input type="number" class="form-control" name="tien">
+
+            </div>
+            <button type="button" class="btn btn-primary" data-action="tao">Tạo Mã QR</button>
+        </div>
+        <div class="col-md-6">
+            <div class="img" id="qrcode"></div>
+        </div>
+    </div>
+</div>
+<script>
+    document.querySelector('button[data-action=tao]').addEventListener('click', async (evt) => {
+        var ma_e = document.querySelector('input[name=ma]');
+        var tien_e = document.querySelector('input[name=tien]');
+        if (ma_e.value && /^\d+$/g.test(tien_e.value)) {
+            try {
+                const response = await fetch('/create-qr', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ma: ma_e.value, tien: tien_e.value})
+
+                });
+                var kq = await response.json();
+                var maqr = kq.data;
+                document.getElementById("qrcode").innerHTML = "";
+                new QRCode(document.getElementById("qrcode"), maqr);
+            } catch (err) {
+                alert(err.message);
+            }
+           
+        } else {
+            ma_e.value = '';
+            tien_e.value = '';
+            alert('Thông tin tên trường không hợp lệ');
+        }
+    });
+</script>
